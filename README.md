@@ -1,6 +1,6 @@
 # stock-alert
 
-This script would run by crontab from 9:00 to 15:00 (Vietnam stock exchange working session) to check price and alert by rules on stock_list file
+This script would run by crontab (or task scheduler on Windows) from 9:00 to 15:00 (Vietnam stock exchange working session) to check price and alert by rules on stock_list file
 
 Install beautifulsoup
 
