@@ -1,1 +1,9 @@
 # stock-alert
+
+This script would run by crontab from 9:00 to 15:00 (Vietnam stock exchange working session) to check price and alert by rules on stock_list file
+
+Install beautifulsoup
+
+Install splash server at port 8050
+
+Prepare a gmail account, remember to create application password! (don't use normal password because Google doesn't allow to send mail with normal password by email package)
