@@ -4,50 +4,56 @@ import os
 from bs4 import BeautifulSoup
 from email.message import EmailMessage
 
+WORK_DIR = os.path.dirname(os.path.realpath(__file__))
 server = smtplib.SMTP('smtp.gmail.com', 587)
 server.starttls()
-server.login('sender@gmail.com','password')
+server.login('user@gmail.com', 'xxxxxxxx')
+
 
 def send_mail(subject):
     msg = EmailMessage()
     msg['Subject'] = subject
-    msg['From'] = 'sender@gmail.com'
+    msg['From'] = 'user@gmail.com'
     msg['To'] = 'receiver@gmail.com'
     server.send_message(msg)
 
+
 def scrape_page(url):
-    res = requests.get('http://localhost:8050/render.html?url={}&timeout=60&wait=20'.format(url))
+    res = requests.get(
+        'http://localhost:8050/render.html?url={}&timeout=60&wait=10'.format(url))
     page = res.content
-    if len(page)>=100000:
+    if len(page) >= 100000:
         return page
     else:
         scrape_page(url)
 
-hose_page = scrape_page("http://banggia2.ssi.com.vn/")
-hnx_page = scrape_page("http://banggia2.ssi.com.vn/Hnx.aspx")
-upcom_page = scrape_page("http://banggia2.ssi.com.vn/Upcom.aspx")
+hose_page = scrape_page("http://priceboard.fpts.com.vn/?s=34%26t=aAll")
+hnx_page = scrape_page("http://priceboard.fpts.com.vn/?s=34%26t=aHNXIndex")
+upcom_page = scrape_page("http://priceboard.fpts.com.vn/?s=34%26t=aHNXUpcomIndex")
 
 hose = BeautifulSoup(hose_page, 'html.parser')
 hnx = BeautifulSoup(hnx_page, 'html.parser')
 upcom = BeautifulSoup(upcom_page, 'html.parser')
 
+print('Done BeautifulSoup')
+
 def get_stock_price(code):
-    css_selector = "tr[id='tr%s'] td:nth-of-type(11)" % code
+    css_selector = "tr[code='%s'] td:nth-of-type(12)" % code
     elem = hose.select(css_selector)
-    if len(elem)>0:
+    if len(elem) > 0:
         return elem[0].text
     else:
         elem = hnx.select(css_selector)
-        if len(elem)>0:
+        if len(elem) > 0:
             return elem[0].text
         else:
             elem = upcom.select(css_selector)
-            if len(elem)>0:
+            if len(elem) > 0:
                 return elem[0].text
             else:
                 raise IndexError()
 
-file_path = os.path.join(sys.path[0], "stock_list")
+file_path = WORK_DIR + "/stock_list"
 input_lines = tuple(open(file_path, 'r'))
 out_lines = []
 is_changed = False
