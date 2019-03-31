@@ -1,3 +1,4 @@
 ACB>30 and False
-VCB<=50
-PVS>=30
+VCB>=60 and False
+CTG>=25
+GMD>=27.8
